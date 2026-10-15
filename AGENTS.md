@@ -18,7 +18,7 @@ This is not a production learning platform. Deck generation, source checking, up
 - `webapp/src/routes.js`: screen discovery and route aliases.
 - `site/present.js`, `site/present.css`, `site/qr.js`: presentation behavior and styling.
 - `site/try/`: standalone browser demo wrapper.
-- `DEPLOY.txt`: manual hosting notes; `wrangler.jsonc`: Cloudflare Worker static-assets configuration. Confirm which deployment target is intended before publishing because these describe different workflows.
+- `README.md`: local setup, project map, and hosting notes; `wrangler.jsonc`: Cloudflare Worker static-assets configuration. Confirm which deployment target is intended before publishing because the README documents distinct Pages and Worker workflows.
 
 ## Working conventions
 
@@ -27,7 +27,7 @@ This is not a production learning platform. Deck generation, source checking, up
 - `site/app/` is generated output from the webapp build. Make source changes in `webapp/`, then rebuild before updating the packaged app in `site/app/`.
 - Root ZIP files are ignored by `.gitignore`; do not add generated ZIP archives to version control.
 - Use the npm scripts in `webapp/package.json`: `npm run dev`, `npm run build`, and `npm run preview`.
-- Follow the deployment notes only after resolving the intended Cloudflare product and deployment method.
+- Follow the README deployment notes only after resolving the intended Cloudflare product and deployment method.
 
 ## Collaboration
 
