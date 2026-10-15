@@ -1,0 +1,13 @@
+{
+  "name": "learned",
+  "compatibility_date": "2026-10-12",
+  "assets": {
+    "directory": "./site"
+  },
+  "routes": [
+    {
+      "pattern": "learned.venfriti.com",
+      "custom_domain": true
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Try Learned in your browser</title>
+<meta name="description" content="Try the Learned prototype: open a sample deck, tap “I don’t get this”, and see a cited side page.">
+<meta name="theme-color" content="#0B1B2B">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/site.css">
+<style>
+body{background:var(--page);color:var(--ink)}
+.app{display:flex;flex-direction:column;min-height:100vh;min-height:100dvh}
+.main{flex:1;min-height:0;display:flex;gap:56px;align-items:center;justify-content:center;padding:20px 32px;flex-wrap:nowrap}
+.stagebox{flex:none;position:relative}
+.scaler{transform-origin:top left;position:absolute;left:0;top:0}
+.frame{background:#fff;border-radius:44px;box-shadow:0 0 0 10px var(--ink),0 24px 60px rgba(11,27,43,.3);overflow:hidden;transition:width .25s,height .25s,border-radius .25s}
+.frame iframe{width:100%;height:100%;border:0;display:block;background:#F4F7FB}
+.side{width:420px;max-width:100%}
+.side h1{font-family:var(--head);font-weight:700;font-size:34px;line-height:1.15;letter-spacing:-.6px;color:var(--navy);margin:0 0 10px}
+.side p{font-size:18px;line-height:1.5;color:var(--body);margin:0 0 18px}
+.side ol{margin:0 0 22px;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px;counter-reset:s}
+.side li{counter-increment:s;display:flex;gap:14px;font-size:17px;line-height:1.4}
+.side li:before{content:counter(s);flex:none;width:30px;height:30px;border-radius:15px;background:var(--navy);color:#fff;font-weight:600;font-size:14px;display:flex;align-items:center;justify-content:center}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 22px;border-radius:24px;font-weight:600;font-size:16px;text-decoration:none;border:0;cursor:pointer;font-family:var(--sans)}
+.btn.p{background:var(--green);color:#fff}
+.btn.o{background:transparent;border:1.5px solid var(--navy);color:var(--navy)}
+.note{font-size:14px;color:var(--muted);margin-top:18px;line-height:1.45}
+.mobile{display:none}
+@media (max-width:900px){
+  .stagebox{display:none}
+  .main{display:block;padding:24px 20px}
+  .side{width:auto}
+  .mobile{display:block}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <a class="brand" href="/" aria-label="Learned, home"><img src="/icon.svg" alt=""><span>Learned</span></a>
+    <nav class="nav" aria-label="Site">
+      <a href="/">Presentation</a>
+      <a href="/try/" aria-current="page">Try the app</a>
+      <details>
+        <summary>Downloads</summary>
+        <div class="menu">
+          <a href="/downloads/Learned-presentation.pptx" download>Presentation (PowerPoint)</a>
+          <a href="/downloads/Learned-how-to-use.pdf" download>How to use (PDF)</a>
+        </div>
+      </details>
+    </nav>
+    <span class="spacer"></span>
+    <span class="chip">Proof of concept · sample content</span>
+  </header>
+  <main class="main" id="main">
+    <div class="stagebox" id="box">
+      <div class="scaler" id="scaler">
+        <div class="frame" id="frame" style="width:390px;height:844px">
+          <iframe id="demo" src="/app/#/Main" title="Learned app, live demo" allow="fullscreen"></iframe>
+        </div>
+      </div>
+    </div>
+    <div class="side">
+      <h1>Try Learned</h1>
+      <p>This is the working prototype with a sample lesson on computer network protocols.</p>
+      <ol>
+        <li><span>Tap <b>Resume</b> to open the deck. It turns to landscape.</span></li>
+        <li><span>On the DNS slide, tap <b>I don’t get this</b>.</span></li>
+        <li><span>Tap <b>Go deeper</b>, then <b>Keep for review</b>.</span></li>
+        <li><span>Use the arrows to finish the deck, then take the quiz.</span></li>
+        <li><span>Open the <b>Review</b> tab. It shows a sample card.</span></li>
+      </ol>
+      <div class="row">
+        <a class="btn p mobile" href="/app/">Open the app</a>
+        <a class="btn o" href="/app/" target="_blank" rel="noopener">Open in its own tab</a>
+        <button class="btn o" id="restart" type="button">Restart demo</button>
+      </div>
+      <p class="note">Progress and settings stay in your browser. On a phone, open the app and use Add to Home Screen to install it.</p>
+    </div>
+  </main>
+</div>
+<script>
+(function(){
+  var frame=document.getElementById('frame'), scaler=document.getElementById('scaler'), box=document.getElementById('box'), main=document.getElementById('main'), demo=document.getElementById('demo');
+  var land=false;
+  function size(){ return land ? [844,390] : [390,844]; }
+  function fit(){
+    var s=size(), w=s[0], h=s[1];
+    frame.style.width=w+'px'; frame.style.height=h+'px'; frame.style.borderRadius=land?'36px':'44px';
+    var availH=window.innerHeight-48-60, availW=Math.min(window.innerWidth-32-420-56-40, 860);
+    var k=Math.min(1,availH/(h+20),availW/(w+20));
+    if(k<0.4)k=0.4;
+    scaler.style.transform='scale('+k+')';
+    box.style.width=((w+20)*k)+'px'; box.style.height=((h+20)*k)+'px';
+    scaler.style.left='10px'; scaler.style.top='10px';
+  }
+  window.addEventListener('message',function(e){
+    if(e.origin!==location.origin||!e.data||e.data.learned!=='orientation')return;
+    land=!!e.data.landscape; fit();
+  });
+  document.getElementById('restart').onclick=function(){ land=false; fit(); demo.src='/app/#/Main'; demo.contentWindow&&demo.contentWindow.location.reload(); };
+  window.addEventListener('resize',fit); fit();
+  document.addEventListener('click',function(e){var d=document.querySelector('.nav details'); if(d&&d.open&&!d.contains(e.target)) d.open=false;});
+})();
+</script>
+</body>
+</html>

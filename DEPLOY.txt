@@ -1,0 +1,16 @@
+Learned: how to host the site on Cloudflare Pages
+
+1. Unzip learned-site.zip. You get a folder called "site" and this file.
+2. In Cloudflare: Workers & Pages > Create > Pages > Upload assets (direct upload).
+3. Give the project a name (it becomes name.pages.dev), then drag the whole "site" folder in and press Deploy.
+4. Open the URL. The home page is the presentation. The Try the app link opens /try/, and the installable app is at /app/.
+
+Things to check after deploying
+- Open /#17 to see the QR slide. The QR code points to your site's /app/ address, so scan it with your phone.
+- On a phone, open /app/ and use Add to Home Screen to install it.
+- If you change the app later, rebuild it (npm run build in the webapp folder) and replace the "app" folder inside "site".
+- The "_headers" file in the folder tells Cloudflare how to cache files. Leave it in.
+
+Before you submit
+- The 600 naira per GB figure on slide 3 is marked "Team estimate". Replace it with a cited source if you can.
+- The sample lesson (computer network protocols) is draft content and has not been checked by a lecturer.

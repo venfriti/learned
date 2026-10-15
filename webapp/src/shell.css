@@ -1,0 +1,26 @@
+* { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+html, body, #root { margin: 0; height: 100%; }
+body { background: #DCE3EC; overscroll-behavior: none; font-family: 'IBM Plex Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+button { font-family: inherit; cursor: pointer; }
+button:focus-visible, a:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 3px solid #0B7A4B; outline-offset: 2px; }
+summary::-webkit-details-marker { display: none; }
+a { -webkit-user-drag: none; }
+
+/* Phones and small windows: the app is the screen. */
+.stage { height: 100%; }
+.phone { position: relative; width: 100%; height: 100vh; height: 100dvh; background: #F4F7FB; overflow: hidden; }
+.screen-root { width: 100%; height: 100%; display: flex; flex-direction: column; }
+.phone:not(.landscape) .screen-root { padding-top: env(safe-area-inset-top); }
+
+/* Decks open as full-screen landscape. A phone held upright shows the stage turned a quarter turn. */
+@media (orientation: portrait) and (max-width: 559px) {
+  .phone.landscape { position: fixed; top: 0; left: 100vw; width: 100vh; width: 100dvh; height: 100vw; transform-origin: 0 0; transform: rotate(90deg); }
+}
+
+/* Desktop and tablet: show it as a phone. */
+@media (min-width: 560px) and (min-height: 700px) {
+  .stage { display: flex; align-items: center; justify-content: center; min-height: 100%; padding: 24px 0; height: auto; }
+  .phone { width: 390px; height: 844px; max-height: calc(100vh - 48px); border-radius: 44px; box-shadow: 0 0 0 10px #0B1B2B, 0 24px 60px rgba(11,27,43,0.3); }
+  .phone.landscape { width: 844px; height: 390px; max-height: none; border-radius: 36px; }
+  .phone:not(.landscape) .screen-root > div:first-child { padding-top: 56px; }
+}
