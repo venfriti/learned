@@ -67,7 +67,7 @@ export default class Viewer extends React.Component {
   render() {
     const { i, side, w, h, listening, speed } = this.state; const Slide = SLIDES[i]; const scale = Math.min(w / STAGE.w, h / STAGE.h); const last = i === SLIDES.length - 1;
     return (
-      <div className="screen-root" style={{ display: 'flex', flexDirection: 'column', background: T.ink, fontFamily: SANS, position: 'relative', overflow: 'hidden' }}>
+      <div className="screen-root viewer-root" style={{ display: 'flex', flexDirection: 'column', background: T.ink, fontFamily: SANS, position: 'relative', overflow: 'hidden' }}>
         <div ref={this.box} style={{ flex: 1, minHeight: 0, position: 'relative', background: T.page, overflow: 'hidden' }}>
           <div style={{ position: 'absolute', left: '50%', top: '50%', width: STAGE.w, height: STAGE.h, marginLeft: -STAGE.w / 2, marginTop: -STAGE.h / 2, transform: `scale(${scale})` }}>
             <Slide marker={i === 3} />

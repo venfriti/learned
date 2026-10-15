@@ -12,6 +12,12 @@ a { -webkit-user-drag: none; }
 .screen-root { width: 100%; height: 100%; display: flex; flex-direction: column; }
 .phone:not(.landscape) .screen-root { padding-top: env(safe-area-inset-top); }
 
+/* The slide viewer replaces the previous screen instantly; fade it in so the cut isn't jarring
+   (it also masks the brief aspect mismatch while an embedding page is still mid-rotation). */
+@keyframes viewer-in { from { opacity: 0; } to { opacity: 1; } }
+.viewer-root { animation: viewer-in .16s ease both; }
+@media (prefers-reduced-motion: reduce) { .viewer-root { animation: none; } }
+
 /* Decks open as full-screen landscape. A phone held upright shows the stage turned a quarter turn. */
 @media (orientation: portrait) and (max-width: 559px) {
   .phone.landscape { position: fixed; top: 0; left: 100vw; width: 100vh; width: 100dvh; height: 100vw; transform-origin: 0 0; transform: rotate(90deg); }

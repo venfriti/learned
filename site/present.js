@@ -127,7 +127,7 @@
           if (i >= 0 && i !== cur) updateUI(i);
         }
       });
-    }, { root: slides, threshold: [0, 0.55, 1] });
+    }, { root: null, threshold: [0, 0.55, 1] });
     els.forEach(function (el) { io.observe(el); });
   }
 
@@ -171,34 +171,55 @@
   var box = document.getElementById('phonebox'), scaler = document.getElementById('phonescaler'), frameEl = document.getElementById('phoneframe');
   if (box && scaler && frameEl) {
     var land = false;
-    function dims() { return land ? [844, 390, '36px'] : [390, 844, '44px']; }
-    function fitPhone() {
-      var d = dims(), w = d[0], h = d[1];
-      var availW = box.clientWidth - 20, availH = box.clientHeight - 20;
-      var k = Math.min(1, availW / (w + 20), availH / (h + 20));
-      if (k < 0.3) k = 0.3;
-      scaler.style.transform = 'scale(' + k + ')';
+    var animating = false;
+    function fitted(isLand) {
+      var w = isLand ? 844 : 390, h = isLand ? 390 : 844;
+      var radius = isLand ? 36 : 44;
+      var availW = Math.max(0, box.clientWidth - 44), availH = Math.max(0, box.clientHeight - 44);
+      var k = Math.min(1.08, availW / w, availH / h);
+      if (!isFinite(k) || k <= 0) k = 1;
+      return { width: Math.round(w * k), height: Math.round(h * k), radius: Math.round(radius * k) };
     }
-    function setSize() {
-      var d = dims();
-      frameEl.style.width = d[0] + 'px'; frameEl.style.height = d[1] + 'px'; frameEl.style.borderRadius = d[2];
+    function applySize(d) {
+      frameEl.style.width = d.width + 'px';
+      frameEl.style.height = d.height + 'px';
+      frameEl.style.borderRadius = d.radius + 'px';
+    }
+    function fitPhone() {
+      var p = fitted(false), l = fitted(true);
+      frameEl.style.setProperty('--portrait-width', p.width + 'px');
+      frameEl.style.setProperty('--portrait-height', p.height + 'px');
+      frameEl.style.setProperty('--portrait-radius', p.radius + 'px');
+      frameEl.style.setProperty('--landscape-width', l.width + 'px');
+      frameEl.style.setProperty('--landscape-height', l.height + 'px');
+      frameEl.style.setProperty('--landscape-radius', l.radius + 'px');
+      if (!animating) applySize(land ? l : p);
     }
     window.addEventListener('message', function (e) {
       if (e.origin !== location.origin || !e.data || e.data.learned !== 'orientation') return;
       var next = !!e.data.landscape;
       if (next === land) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        land = next;
+        fitPhone();
+        return;
+      }
+      var from = fitted(land);
       land = next;
+      fitPhone();
+      applySize(from);
+      animating = true;
       frameEl.classList.remove('turning-to-landscape', 'turning-to-portrait');
       void frameEl.offsetWidth; // restart the animation if one was already running
       frameEl.classList.add(land ? 'turning-to-landscape' : 'turning-to-portrait');
-      fitPhone(); // the scaler eases to the new fit while the frame turns
     });
     frameEl.addEventListener('animationend', function () {
       frameEl.classList.remove('turning-to-landscape', 'turning-to-portrait');
-      setSize();
+      animating = false;
+      fitPhone();
     });
     window.addEventListener('resize', fitPhone);
     if (window.ResizeObserver) new ResizeObserver(fitPhone).observe(box);
-    setSize(); fitPhone();
+    fitPhone();
   }
 })();

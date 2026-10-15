@@ -36,7 +36,7 @@ export const Icon = ({ name, size = 22, sw = 1.9 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]}</svg>
 );
 
-export const Page = ({ children, tab, pad = '56px 20px 0' }) => (
+export const Page = ({ children, tab, pad = '56px 24px 16px' }) => (
   <div className="screen-root" style={{ display: 'flex', flexDirection: 'column', background: T.page, color: T.ink, fontFamily: SANS }}>
     <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: pad, display: 'flex', flexDirection: 'column', gap: 20 }}>{children}<div style={{ flexShrink: 0, height: 4 }} /></div>
     {tab && <TabBar active={tab} />}
@@ -108,5 +108,5 @@ export const Thumb = ({ w = 30, hue = T.navy }) => (
 );
 
 export const DarkCard = ({ children }) => (
-  <div style={{ background: T.navy, color: '#fff', borderRadius: 20, padding: 20, display: 'flex', flexDirection: 'column', gap: 12 }}>{children}</div>
+  <div style={{ background: T.navy, color: '#fff', borderRadius: 20, padding: 24, display: 'flex', flexDirection: 'column', gap: 12 }}>{children}</div>
 );
